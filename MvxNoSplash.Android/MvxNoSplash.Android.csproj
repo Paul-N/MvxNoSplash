@@ -11,6 +11,13 @@
 	<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\drawable-xhdpi\img_logo.png" />
+    <None Remove="Resources\drawable-xxhdpi\img_logo.png" />
+    <None Remove="Resources\drawable-xxxhdpi\img_logo.png" />
+    <None Remove="Resources\drawable\launch_screen.xml" />
+    <None Remove="Resources\layout\activity_splash.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MvvmCross" Version="9.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Xamarin" Version="1.0.0" />

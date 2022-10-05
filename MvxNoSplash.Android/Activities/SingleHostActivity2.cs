@@ -1,5 +1,6 @@
 ﻿using Android.Runtime;
 using Android.Views;
+using AndroidX.AppCompat.App;
 using MvvmCross;
 using MvvmCross.Core;
 using MvvmCross.Platforms.Android.Core;
@@ -8,10 +9,8 @@ using MvvmCross.ViewModels;
 
 namespace MvxNoSplash.Android.Activities
 {
-    [Register("evilgenius.tabbednavigation.SingleHostActivity")]
-    public abstract class SingleHostActivity<TMvxAndroidSetup, TApplication> : MvxActivity, IMvxSetupMonitor
-        where TMvxAndroidSetup : MvxAndroidSetup<TApplication>, new()
-        where TApplication : class, IMvxApplication, new()
+    [Register("evilgenius.tabbednavigation.SingleHostActivity2")]
+    public abstract class SingleHostActivity2 : AppCompatActivity, IMvxSetupMonitor
     {
         protected const int NoContent = 0;
 
@@ -21,15 +20,9 @@ namespace MvxNoSplash.Android.Activities
 
         private Bundle _bundle;
 
-        public new MvxNullViewModel ViewModel
-        {
-            get => base.ViewModel as MvxNullViewModel;
-            set => base.ViewModel = value;
-        }
+        protected SingleHostActivity2() { }
 
-        protected SingleHostActivity() => RegisterSetup();
-
-        protected SingleHostActivity(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer) { }
+        protected SingleHostActivity2(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer) { }
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -87,8 +80,5 @@ namespace MvxNoSplash.Android.Activities
         }
 
         protected virtual object GetAppStartHint(object hint = null) => hint;
-
-        protected virtual void RegisterSetup()
-            => this.RegisterSetupType<TMvxAndroidSetup>();
     }
 }
