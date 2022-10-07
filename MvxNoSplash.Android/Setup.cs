@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MvvmCross.Binding;
 using MvvmCross.IoC;
 using MvvmCross.Platforms.Android.Core;
 using MvxNoSplash.Core;
@@ -14,14 +15,22 @@ namespace MvxNoSplash.Android
             // serilog configuration
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.AndroidLog()
+                .WriteTo.Debug()
                 .CreateLogger();
 
             return new SerilogLoggerFactory();
         }
 
         protected override ILoggerProvider CreateLogProvider() => new SerilogLoggerProvider();
-        
-        protected override IMvxIoCProvider CreateIocProvider() => base.CreateIocProvider();
+
+        protected override MvxBindingBuilder CreateBindingBuilder()
+        {
+            return base.CreateBindingBuilder();
+        }
+
+        protected override void InitializeLastChance(IMvxIoCProvider iocProvider)
+        {
+            base.InitializeLastChance(iocProvider);
+        }
     }
 }

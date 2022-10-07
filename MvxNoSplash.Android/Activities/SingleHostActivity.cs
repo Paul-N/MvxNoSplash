@@ -1,7 +1,10 @@
-﻿using Android.Runtime;
+﻿using Android.Content;
+using Android.Runtime;
 using Android.Views;
 using MvvmCross;
 using MvvmCross.Core;
+using MvvmCross.Platforms.Android.Binding.BindingContext;
+using MvvmCross.Platforms.Android.Binding.Views;
 using MvvmCross.Platforms.Android.Core;
 using MvvmCross.Platforms.Android.Views;
 using MvvmCross.ViewModels;
@@ -9,9 +12,7 @@ using MvvmCross.ViewModels;
 namespace MvxNoSplash.Android.Activities
 {
     [Register("evilgenius.tabbednavigation.SingleHostActivity")]
-    public abstract class SingleHostActivity<TMvxAndroidSetup, TApplication> : MvxActivity, IMvxSetupMonitor
-        where TMvxAndroidSetup : MvxAndroidSetup<TApplication>, new()
-        where TApplication : class, IMvxApplication, new()
+    public abstract class SingleHostActivity : MvxActivity, IMvxSetupMonitor
     {
         protected const int NoContent = 0;
 
@@ -27,13 +28,15 @@ namespace MvxNoSplash.Android.Activities
             set => base.ViewModel = value;
         }
 
-        protected SingleHostActivity() => RegisterSetup();
+        protected SingleHostActivity() { }
 
         protected SingleHostActivity(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer) { }
 
         protected override void OnCreate(Bundle bundle)
         {
             SetTheme(ThemeId);
+
+
 
             _bundle = bundle;
 
@@ -42,13 +45,7 @@ namespace MvxNoSplash.Android.Activities
 
             base.OnCreate(bundle);
 
-            if (ResourceId != NoContent)
-            {
-                // Set our view from the "splash" layout resource
-                // Be careful to use non-binding inflation
-                var content = LayoutInflater.Inflate(ResourceId, null);
-                SetContentView(content);
-            }
+
         }
 
         private bool _isResumed;
@@ -74,8 +71,39 @@ namespace MvxNoSplash.Android.Activities
             if (!_isResumed)
                 return;
 
+            if (ResourceId != NoContent)
+            {
+                // Set our view from the "splash" layout resource
+                // Be careful to use non-binding inflation
+                //var content = LayoutInflater.Inflate(ResourceId, null);
+                //SetContentView(content);
+                //SetContentView(ResourceId);
+
+                //_view = this.BindingInflate(ResourceId, null);
+                //SetContentView(_view);
+
+                //var ctx = BaseContextToAttach(this) is _MvxContextWrapper;
+                //if (ctx)
+                //{
+                //    var ioc = Mvx.IoCProvider;
+                    //_view = this.BindingInflate(ResourceId, null);
+                    SetContentView2(ResourceId);
+                //}
+            }
             await RunAppStartAsync(_bundle);
         }
+
+        public void SetContentView2(int layoutResID)
+        {
+            if (BaseContextToAttach2(this) is _MvxContextWrapper)
+            {
+                _view = this.BindingInflate(layoutResID, null);
+                SetContentView(_view);
+                return;
+            }
+        }
+
+        protected Context BaseContextToAttach2(Context @base) => _MvxContextWrapper.Wrap(@base, this);
 
         protected virtual async Task RunAppStartAsync(Bundle bundle)
         {
@@ -87,8 +115,5 @@ namespace MvxNoSplash.Android.Activities
         }
 
         protected virtual object GetAppStartHint(object hint = null) => hint;
-
-        protected virtual void RegisterSetup()
-            => this.RegisterSetupType<TMvxAndroidSetup>();
     }
 }
